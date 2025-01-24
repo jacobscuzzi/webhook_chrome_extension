@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Send to Webhook",
+  "version": "1.0",
+  "permissions": ["contextMenus", "activeTab", "scripting", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "srcs/background.js"
+  },
+  "action": {
+    "default_popup": "/srcs/popup.html",
+    "default_icon": "/images/icon.png"
+  },
+  "icons": {
+    "16": "/images/icon.png",
+    "48": "/images/icon.png",
+    "128": "/images/icon.png"
+  }
+}

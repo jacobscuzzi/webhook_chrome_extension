@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Webhook</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #000;
+      color: #fff;
+      width: 300px;
+      box-sizing: border-box;
+    }
+
+    h3 {
+      font-size: 20px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .form-field {
+      margin-bottom: 15px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .form-field input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #000;
+      color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #FF8C00;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background-color: #e07b00;
+    }
+
+    .toggle-title {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 15px;
+      color: #fff;
+    }
+
+    .toggle-links {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .toggle-links a {
+      display: block;
+      color: #FF8C00;
+      text-decoration: none;
+      margin-bottom: 5px;
+    }
+
+    .toggle-links a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .email-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .email-container input {
+      width: calc(100% - 60px);
+      margin-right: 10px;
+    }
+
+    .email-container button {
+      width: 50px;
+      padding: 8px;
+      background-color: #FF8C00;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .email-container button:hover {
+      background-color: #e07b00;
+    }
+  </style>
+</head>
+<body>
+  <div id="emailView">
+    <h3>Enter Your Email</h3>
+    <div class="email-container">
+      <input type="email" id="emailInput" placeholder="Enter your email">
+      <button id="saveEmailButton">Save</button>
+    </div>
+  </div>
+
+  <div id="mainView" style="display: none;">
+    <div class="header">
+      <img src="../images/icon.png" alt="Icon">
+      <div style="display: flex; align-items: center;">
+        <span id="savedEmail" style="color: #fff; margin-right: 10px;"></span>
+        <button id="editEmailButton" style="width: auto; padding: 5px 10px; margin: 0;">Edit</button>
+      </div>
+    </div>
+
+    <div id="formContainer"></div>
+
+    <button id="sendToWebhook1">Send to Contacts</button>
+    <button id="sendToWebhook2">Send to Company Enrichment</button>
+    <button id="sendToWebhook3">Send to Indepth Research</button>
+    <button id="sendToWebhook4">Send to Custom Learningpage</button>
+</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
