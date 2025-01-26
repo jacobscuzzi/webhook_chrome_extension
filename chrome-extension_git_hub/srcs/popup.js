@@ -12,40 +12,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         mainView: mainView?.style?.display
     });
 
+    function updateEmailDisplay(email) {
+      const maxLength = 20; // Adjust this value to set how long email is displayed
+      const displayEmail = email.length > maxLength ? 
+          email.substring(0, maxLength) + "..." : 
+          email;
+      savedEmail.textContent = displayEmail;
+      savedEmail.title = email; // Show full email on hover
+     }
+  
     // Load saved email from storage
     await chrome.storage.sync.get("email", (data) => {
-        console.log("Loaded email data:", data);
-        if (data.email) {
-            emailView.style.display = "none";
-            mainView.style.display = "block";
-            savedEmail.textContent = data.email;
-        } else {
-            emailView.style.display = "block";
-            mainView.style.display = "none";
-        }
+      if (data.email) {
+          emailView.style.display = "none";
+          mainView.style.display = "block";
+          updateEmailDisplay(data.email);
+      } else {
+          emailView.style.display = "block";
+          mainView.style.display = "none";
+      }
     });
 
     // Save email to storage
     saveEmailButton.addEventListener("click", async () => {
-        const email = emailInput.value;
-        console.log("Save button clicked, email:", email);
-        
-        if (email) {
-            await chrome.storage.sync.set({ email });
-            console.log("Email saved to storage");
-            
-            // Force DOM update
-            emailView.style.display = "none";
-            mainView.style.display = "block";
-            savedEmail.textContent = email;
-            
-            // Debug logging
-            console.log("View states after save:", {
-                emailView: emailView.style.display,
-                mainView: mainView.style.display
-            });
-        }
-    });
+      const email = emailInput.value;
+      if (email) {
+          await chrome.storage.sync.set({ email });
+          emailView.style.display = "none";
+          mainView.style.display = "block";
+          updateEmailDisplay(email);
+      }
+  });
 
     // this is to edit the email
     editEmailButton.addEventListener("click", () => {

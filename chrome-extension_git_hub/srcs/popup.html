@@ -127,6 +127,7 @@
     .email-container button:hover {
       background-color: #7f9fff;
     }
+
   </style>
 </head>
 <body>
@@ -141,8 +142,8 @@
   <div id="mainView" style="display: none;">
     <div class="header">
       <img src="../images/icon.png" alt="Icon">
-      <div style="display: flex; align-items: center;">
-        <span id="savedEmail" style="color: #000000; margin-right: 10px;"></span>
+      <div class="email-container" style="display: flex; align-items: center;">
+        <span id="savedEmail" style="color: #000000; margin-right: 10px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
         <button id="editEmailButton" style="width: auto; padding: 5px 10px; margin: 0;">Edit</button>
       </div>
     </div>
@@ -153,7 +154,7 @@
     <button id="sendToWebhook2">Send to Company Enrichment</button>
     <button id="sendToWebhook3">Send to Indepth Research</button>
     <button id="sendToWebhook4">Send to Custom Learningpage</button>
-</div>
+  </div>
 
   <script src="popup.js"></script>
 </body>
