@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
   
         if (response.ok) {
-          alert("Data successfully sent to the webhook!");
+          alert("Tu vas recevoir un message sur Teams dans quelques instants !");
         } else {
           alert("Failed to send data to the webhook.");
         }
