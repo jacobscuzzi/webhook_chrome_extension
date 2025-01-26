@@ -55,8 +55,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const webhooks = {
       webhook1: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-90daaca4-a9c9-40be-aa69-17245b91faa8",
       webhook2: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-583c0378-a31d-47e9-ae07-e5af6a945e88",
-      webhook3: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-b09cf39e-c1e3-4bcc-84c5-462be24da8cc",
-      webhook4: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-f03b2c4b-d1d5-4712-8398-03e46894e999",
+      //webhook3: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-b09cf39e-c1e3-4bcc-84c5-462be24da8cc",
+      //webhook4: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-f03b2c4b-d1d5-4712-8398-03e46894e999",
     };
   
     const cleanUrl = (url) => url?.split("?")[0] || ""; // Clean URL by removing query parameters
@@ -132,8 +132,8 @@ document.addEventListener("DOMContentLoaded", async () => {
  
     document.getElementById("sendToWebhook1").addEventListener("click", () => sendToWebhook(webhooks.webhook1));
     document.getElementById("sendToWebhook2").addEventListener("click", () => sendToWebhook(webhooks.webhook2));
-    document.getElementById("sendToWebhook3").addEventListener("click", () => sendToWebhook(webhooks.webhook3));
-    document.getElementById("sendToWebhook4").addEventListener("click", () => sendToWebhook(webhooks.webhook4));
+    //document.getElementById("sendToWebhook3").addEventListener("click", () => sendToWebhook(webhooks.webhook3));
+    //document.getElementById("sendToWebhook4").addEventListener("click", () => sendToWebhook(webhooks.webhook4));
   
     // Function to send data to the webhook (tu peut changer ici pour changer les noms de data)
     async function sendToWebhook(webhookUrl) {

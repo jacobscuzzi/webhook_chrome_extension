@@ -2,23 +2,23 @@
 const webhooks = {
   webhook1: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-90daaca4-a9c9-40be-aa69-17245b91faa8",
   webhook2: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-583c0378-a31d-47e9-ae07-e5af6a945e88",
-  webhook3: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-b09cf39e-c1e3-4bcc-84c5-462be24da8cc",
-  webhook4: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-f03b2c4b-d1d5-4712-8398-03e46894e999",
+//webhook3: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-b09cf39e-c1e3-4bcc-84c5-462be24da8cc",
+//webhook4: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-f03b2c4b-d1d5-4712-8398-03e46894e999",
 };
 
 // Create context menus
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
       id: "sendToWebhook1",
-      title: "Send to Contacts",
+      title: "Enrichir Contact",
       contexts: ["link"],
   });
   chrome.contextMenus.create({
       id: "sendToWebhook2",
-      title: "Send to Company Enrichement",
+      title: "Analyse Entreprise",
       contexts: ["link"],
   });
-  chrome.contextMenus.create({
+  /*chrome.contextMenus.create({
       id: "sendToWebhook3",
       title: "Send to Indepth research",
       contexts: ["link"],
@@ -28,6 +28,7 @@ chrome.runtime.onInstalled.addListener(() => {
       title: "Send to Custom Learningpage",
       contexts: ["link"],
   });
+  */
 });
 
 // Handle context menu clicks
