@@ -20,10 +20,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       savedEmail.textContent = displayEmail;
       savedEmail.title = email; // Show full email on hover
      }
-  
+	 let email = "";
     // Load saved email from storage
     await chrome.storage.sync.get("email", (data) => {
       if (data.email) {
+		fullEmail = data.email;
           emailView.style.display = "none";
           mainView.style.display = "block";
           updateEmailDisplay(data.email);
@@ -137,13 +138,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   
     // Function to send data to the webhook (tu peut changer ici pour changer les noms de data)
     async function sendToWebhook(webhookUrl) {
-      const email = savedEmail.textContent;
       const payload = {
         "LinkedIn Url": document.getElementById("field1").value,
         "Full Name": document.getElementById("field2")?.value || "",
         "Company Name": document.getElementById("field2")?.value || "",
         "LinkedIn Company Page": document.getElementById("field5")?.value || "",
-        "creator": email,
+        "creator": fullemail,
       };
   
       console.log("Payload to send:", payload);
