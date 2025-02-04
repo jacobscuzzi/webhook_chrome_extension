@@ -2,7 +2,13 @@
   "manifest_version": 3,
   "name": "Send to Webhook",
   "version": "1.0",
-  "permissions": ["contextMenus", "activeTab", "scripting", "storage"],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "scripting",
+    "notifications"
+  ],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "srcs/background.js"
