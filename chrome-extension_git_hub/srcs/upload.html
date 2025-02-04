@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload CSV</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+    .upload-container {
+      text-align: center;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #4877FF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #365bbf;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .intro-text {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="upload-container">
+    <img src="../images/icon.png" alt="Icon" style="width: 100px; height: 100px;">
+    <div class="intro-text">
+      <p>Please upload a CSV file with LinkedIn contacts.</p>
+      <p>The CSV file should have the following columns:</p>
+      <ul style="text-align: left; display: inline-block;">
+        <li><strong>Full Name</strong> or <strong>Name</strong></li>
+        <li><strong>LinkedIn URL</strong> or <strong>LinkedIn Profile</strong></li>
+      </ul>
+    </div>
+    <button id="uploadCsvButton">Upload CSV File with LinkedIn Contacts</button>
+    <input type="file" id="csvFileInput" accept=".csv">
+  </div>
+  <script type="module" src="upload.js"></script>
+</body>
+</html>

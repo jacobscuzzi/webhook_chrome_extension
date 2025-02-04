@@ -1,4 +1,5 @@
-// added Popup for csv import
+import { webhooks } from './webhook_tools.js';
+
 
 function showNotification(message, type = 'success') {
     const existingNotification = document.getElementById('custom-notification');
@@ -80,12 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       emailView.style.display = "block";
   });
 
-  const webhooks = {
-      webhook1: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-90daaca4-a9c9-40be-aa69-17245b91faa8",
-      webhook2: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-583c0378-a31d-47e9-ae07-e5af6a945e88",
-      malo_tester: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-b77d1251-bcae-41a4-9e36-b17082d5814e",
-      tester: "https://hundreds-nightfall-52.webhook.cool"
-  };
+
 
   const cleanUrl = (url) => url?.split("?")[0] || "";
 
@@ -155,121 +151,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // File input trigger
   importCsvButton.addEventListener('click', () => {
-      console.log("Import CSV button clicked");
-      csvFileInput.click();
-  });
+    window.open('upload.html', '_blank', 'width=800,height=600');
+    });
 
-  // CSV parsing function
-  function parseCSV(csvText) {
-      const lines = csvText.split('\n').filter(line => line.trim() !== '');
-      const headers = lines[0].split(',').map(header => header.trim().toLowerCase());
-
-      const nameIndex = headers.findIndex(header => 
-          ['full name', 'name', 'fullname', 'contact'].includes(header)
-      );
-      const linkedinIndex = headers.findIndex(header => 
-          ['linkedin url', 'linkedin profile', 'linkedin', 'profile url'].includes(header)
-      );
-
-      if (nameIndex === -1 || linkedinIndex === -1) {
-          throw new Error('CSV must contain columns for Name and LinkedIn URL');
-      }
-
-      if (!fullEmail) {
-          alert("Please save your email address first");
-          throw new Error("Email not saved");
-      }
-
-      return lines.slice(1).map(line => {
-          const values = line.split(',').map(value => value.trim());
-          return {
-              fullName: values[nameIndex],
-              linkedinUrl: values[linkedinIndex]
-          };
-      }).filter(row => row.fullName && row.linkedinUrl);
-  }
-
-  // File selection handler
-  csvFileInput.addEventListener('change', async (event) => {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-
-    const file = event.target.files[0];
-    if (!file) return;
-
-    try {
-        const csvText = await file.text();
-        const contacts = parseCSV(csvText);
-
-        let successCount = 0;
-        let failureCount = 0;
-
-        console.log(`Total contacts to process: ${contacts.length}`);
-
-
-        // Use Promise.all to send all contacts concurrently
-        const results = await Promise.all(contacts.map(async (contact) => {
-            const payload = {
-                "LinkedIn Url": contact.linkedinUrl,
-                "Full Name": contact.fullName,
-                "creator": fullEmail,
-            };
-
-            try {
-                console.log(`Sending data for contact: ${contact.fullName}`);
-                const response = await fetch(webhooks.tester, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload),
-                });
-
-                if (!response.ok) {
-                    console.error(`Failed to send data for ${contact.fullName}`);
-                    return false;
-                } else {
-                    console.log(`Successfully sent data for ${contact.fullName}`);
-                    return true;
-                }
-            } catch (error) {
-                console.error("Error sending contact:", error);
-                return false;
-            }
-        }));
-
-        // Count successes and failures
-        successCount = results.filter(result => result).length;
-        failureCount = results.filter(result => !result).length;
-
-        if (successCount > 0) {
-            chrome.notifications.create({
-                type: 'basic',
-                iconUrl: '../images/icon.png',
-                title: 'CSV Import Success',
-                message: `Processed: ${contacts.length}\nSuccessful: ${successCount}`
-            });
-        }
-
-        if (failureCount > 0) {
-            chrome.notifications.create({
-                type: 'basic',
-                iconUrl: '../images/icon.png',
-                title: 'CSV Import Partial Failure',
-                message: `Failed: ${failureCount}`
-            });
-        }
-
-        csvFileInput.value = '';
-    } catch (error) {
-        chrome.notifications.create({
-            type: 'basic',
-            iconUrl: '../images/icon.png',
-            title: 'CSV Import Error',
-            message: error.message || 'An unexpected error occurred'
-        });
-    }
-});
 
   // Existing webhook send buttons
   document.getElementById("sendToWebhook1").addEventListener("click", () => {
