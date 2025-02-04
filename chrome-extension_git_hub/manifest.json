@@ -21,5 +21,13 @@
     "16": "/images/icon.png",
     "48": "/images/icon.png",
     "128": "/images/icon.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "srcs/webhook_tools.js"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
