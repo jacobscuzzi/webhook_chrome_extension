@@ -128,6 +128,10 @@
       background-color: #7f9fff;
     }
 
+    .file-input-container {
+      margin-bottom: 15px;
+    }
+
   </style>
 </head>
 <body>
@@ -154,8 +158,9 @@
     <button id="sendToWebhook2">Analyse Entreprise</button>
     <!--<button id="sendToWebhook3">Send to Indepth Research</button>-->
     <!--<button id="sendToWebhook4">Send to Custom Learningpage</button>-->
+    <button id="importCsvButton">Import CSV</button>
+    <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
   </div>
-
   <script src="popup.js"></script>
 </body>
 </html>
