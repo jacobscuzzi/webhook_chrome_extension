@@ -158,11 +158,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Existing webhook send buttons
   document.getElementById("sendToWebhook1").addEventListener("click", () => {
       console.log("Send to Webhook 1 button clicked");
-      sendToWebhook(webhooks.tester);                                           //// UNBEDINGT ÄNDERN (JETZT MIT TEST API)
+      sendToWebhook(webhooks.webhook1);                                           //// UNBEDINGT ÄNDERN (JETZT MIT TEST API)
   });
   document.getElementById("sendToWebhook2").addEventListener("click", () => {
       console.log("Send to Webhook 2 button clicked");
-      sendToWebhook(webhooks.tester);                                        //// UNBEDINGT ÄNDERN (JETZT MIT TEST API) 
+      sendToWebhook(webhooks.webhook2);                                        //// UNBEDINGT ÄNDERN (JETZT MIT TEST API) 
   });
 // functioon to send to webhook
   async function sendToWebhook(webhookUrl) {

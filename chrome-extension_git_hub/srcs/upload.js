@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 try {
                     console.log(`Sending data for contact: ${contact.fullName}`);
-                    const response = await fetch(webhooks.tester, {
+                    const response = await fetch(webhooks.webhook1, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(payload),
