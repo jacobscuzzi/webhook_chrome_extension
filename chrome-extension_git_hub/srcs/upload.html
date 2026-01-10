@@ -6,6 +6,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-primary: #0f0f0f;
+      --bg-elevated: rgba(255,255,255,0.04);
+      --bg-glass: rgba(255,255,255,0.06);
+      --border-subtle: rgba(255,255,255,0.08);
+      --border-glass: rgba(255,255,255,0.12);
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0a0;
+      --text-muted: #6b6b6b;
+      --accent: #fc5000;
+      --accent-hover: #ff6a1a;
+      --accent-glow: rgba(252,80,0,0.3);
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -19,32 +33,38 @@
       min-height: 100vh;
       margin: 0;
       padding: 40px;
-      background-color: #ffffff;
+      background-color: var(--bg-primary);
       text-align: center;
     }
 
     .upload-container {
-      max-width: 450px;
+      max-width: 420px;
       width: 100%;
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 40px;
     }
 
     .upload-container img {
-      width: 72px;
-      height: 72px;
-      border-radius: 14px;
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
       margin-bottom: 24px;
     }
 
     h2 {
       font-size: 20px;
       font-weight: 600;
-      color: #1e1e1e;
+      color: var(--text-primary);
       margin: 0 0 12px 0;
     }
 
     .intro-text {
       font-size: 14px;
-      color: #6b6b6b;
+      color: var(--text-secondary);
       line-height: 1.6;
     }
 
@@ -61,33 +81,36 @@
 
     .intro-text li {
       margin-bottom: 6px;
-      color: #6b6b6b;
+      color: var(--text-secondary);
     }
 
     .intro-text strong {
-      color: #1e1e1e;
+      color: var(--text-primary);
       font-weight: 500;
     }
 
     button {
-      padding: 14px 32px;
+      padding: 16px 40px;
       font-family: 'Inter', sans-serif;
       font-size: 15px;
       font-weight: 500;
-      background-color: #fc5000;
+      background-color: var(--accent);
       color: #ffffff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.1s ease, background-color 0.2s ease;
+      transition: all 0.15s ease-out;
+      box-shadow: 0 0 24px var(--accent-glow);
     }
 
     button:hover {
-      background-color: #e54800;
+      background-color: var(--accent-hover);
+      box-shadow: 0 0 36px rgba(252,80,0,0.5);
+      transform: scale(1.02);
     }
 
     button:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
     input[type="file"] {

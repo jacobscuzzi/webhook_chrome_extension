@@ -11,7 +11,7 @@ type WebhookId = 'sendToWebhook1' | 'sendToWebhook2';
 async function showNotification(title: string, message: string): Promise<void> {
   await chrome.notifications.create({
     type: 'basic',
-    iconUrl: '/images/icon.png',
+    iconUrl: 'images/icon.png',
     title,
     message
   });

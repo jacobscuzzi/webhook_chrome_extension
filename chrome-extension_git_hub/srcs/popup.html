@@ -6,6 +6,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-primary: #0f0f0f;
+      --bg-elevated: rgba(255,255,255,0.04);
+      --bg-glass: rgba(255,255,255,0.06);
+      --border-subtle: rgba(255,255,255,0.08);
+      --border-glass: rgba(255,255,255,0.12);
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0a0;
+      --text-muted: #6b6b6b;
+      --accent: #fc5000;
+      --accent-hover: #ff6a1a;
+      --accent-glow: rgba(252,80,0,0.3);
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -13,94 +27,123 @@
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       margin: 0;
-      padding: 20px;
-      background-color: #ffffff;
-      color: #1e1e1e;
-      width: 450px;
+      padding: 24px;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      width: 380px;
+      min-height: 200px;
     }
 
     h3 {
       font-size: 18px;
       font-weight: 600;
-      color: #1e1e1e;
+      color: var(--text-primary);
       text-align: center;
-      margin: 0 0 20px 0;
+      margin: 0 0 24px 0;
     }
 
+    /* Glass Card */
+    .glass-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* Form Fields - Underline Style */
     .form-field {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .form-field label {
       display: block;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 500;
-      color: #6b6b6b;
-      margin-bottom: 6px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .form-field input {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #e5e5e5;
-      border-radius: 8px;
-      background-color: #ffffff;
-      color: #1e1e1e;
+      padding: 12px 0;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      border-radius: 0;
+      background-color: transparent;
+      color: var(--text-primary);
       font-family: 'Inter', sans-serif;
       font-size: 14px;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.15s ease-out;
     }
 
     .form-field input:focus {
       outline: none;
-      border-color: #fc5000;
+      border-bottom-color: var(--accent);
     }
 
+    .form-field input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Buttons */
     button {
       width: 100%;
-      padding: 12px 16px;
-      background-color: #fc5000;
+      padding: 14px 20px;
+      background-color: var(--accent);
       color: #ffffff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      margin-bottom: 10px;
-      transition: transform 0.1s ease, background-color 0.2s ease;
+      transition: all 0.15s ease-out;
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
     button:hover {
-      background-color: #e54800;
+      background-color: var(--accent-hover);
+      box-shadow: 0 0 30px rgba(252,80,0,0.5);
+      transform: scale(1.02);
     }
 
     button:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
-    .btn-secondary {
-      background-color: #f5f5f5;
-      color: #1e1e1e;
+    /* Ghost Button */
+    .btn-ghost {
+      background-color: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      box-shadow: none;
     }
 
-    .btn-secondary:hover {
-      background-color: #ebebeb;
+    .btn-ghost:hover {
+      background-color: rgba(252,80,0,0.1);
+      box-shadow: none;
+      transform: scale(1.02);
     }
 
+    /* Header */
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
       padding-bottom: 16px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .header img {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
     }
 
     .email-container {
@@ -109,29 +152,43 @@
       gap: 10px;
     }
 
+    /* Email View */
+    #emailView {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+    }
+
     #emailView .email-container {
+      width: 100%;
       margin-bottom: 0;
     }
 
     #emailView .email-container input {
       flex: 1;
-      padding: 10px 12px;
-      border: 1px solid #e5e5e5;
-      border-radius: 8px;
-      background-color: #ffffff;
-      color: #1e1e1e;
+      padding: 14px 16px;
+      border: 1px solid var(--border-glass);
+      border-radius: 10px;
+      background-color: var(--bg-glass);
+      color: var(--text-primary);
       font-family: 'Inter', sans-serif;
       font-size: 14px;
+      transition: border-color 0.15s ease-out;
     }
 
     #emailView .email-container input:focus {
       outline: none;
-      border-color: #fc5000;
+      border-color: var(--accent);
+    }
+
+    #emailView .email-container input::placeholder {
+      color: var(--text-muted);
     }
 
     #emailView .email-container button {
       width: auto;
-      padding: 10px 20px;
+      padding: 14px 24px;
       margin: 0;
     }
 
@@ -139,33 +196,56 @@
       margin-bottom: 0;
     }
 
+    /* Email Badge */
+    .email-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-glass);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+    }
+
     #savedEmail {
-      font-size: 13px;
-      color: #6b6b6b;
-      max-width: 140px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      max-width: 120px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     #editEmailButton {
-      width: auto;
-      padding: 6px 12px;
+      width: 28px;
+      height: 28px;
+      padding: 0;
       margin: 0;
-      font-size: 12px;
-      background-color: #f5f5f5;
-      color: #1e1e1e;
+      font-size: 14px;
+      background-color: transparent;
+      color: var(--text-secondary);
       border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
     }
 
     #editEmailButton:hover {
-      background-color: #ebebeb;
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      box-shadow: none;
+      transform: none;
     }
 
+    /* Form Container */
     #formContainer {
-      background-color: #fafafa;
-      border-radius: 10px;
-      padding: 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
       margin-bottom: 16px;
     }
 
@@ -177,10 +257,11 @@
       margin-bottom: 0;
     }
 
+    /* Actions */
     .actions {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .actions button {
@@ -191,6 +272,10 @@
       margin-top: 4px;
     }
 
+    /* Hidden file input */
+    input[type="file"] {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -205,9 +290,9 @@
   <div id="mainView" style="display: none;">
     <div class="header">
       <img src="../images/icon.png" alt="Palladio">
-      <div class="email-container">
+      <div class="email-badge">
         <span id="savedEmail"></span>
-        <button id="editEmailButton">Edit</button>
+        <button id="editEmailButton">&#9998;</button>
       </div>
     </div>
 
@@ -216,7 +301,7 @@
     <div class="actions">
       <button id="sendToWebhook1">Enrichir Contact</button>
       <button id="sendToWebhook2">Analyse Entreprise</button>
-      <button id="importCsvButton" class="btn-secondary">Import CSV</button>
+      <button id="importCsvButton" class="btn-ghost">Import CSV</button>
     </div>
     <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
   </div>
