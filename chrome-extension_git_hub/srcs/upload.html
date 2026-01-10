@@ -1,59 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Upload CSV</title>
+  <title>Upload CSV - Palladio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
-      background-color: #f0f0f0;
+      padding: 40px;
+      background-color: #ffffff;
       text-align: center;
     }
+
     .upload-container {
-      text-align: center;
+      max-width: 450px;
+      width: 100%;
     }
+
+    .upload-container img {
+      width: 72px;
+      height: 72px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e1e1e;
+      margin: 0 0 12px 0;
+    }
+
+    .intro-text {
+      font-size: 14px;
+      color: #6b6b6b;
+      line-height: 1.6;
+    }
+
+    .intro-text p {
+      margin: 0 0 16px 0;
+    }
+
+    .intro-text ul {
+      text-align: left;
+      display: inline-block;
+      margin: 0 0 28px 0;
+      padding-left: 20px;
+    }
+
+    .intro-text li {
+      margin-bottom: 6px;
+      color: #6b6b6b;
+    }
+
+    .intro-text strong {
+      color: #1e1e1e;
+      font-weight: 500;
+    }
+
     button {
-      padding: 15px 30px;
-      font-size: 18px;
-      background-color: #4877FF;
-      color: #fff;
+      padding: 14px 32px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      background-color: #fc5000;
+      color: #ffffff;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 20px;
+      transition: transform 0.1s ease, background-color 0.2s ease;
     }
+
     button:hover {
-      background-color: #365bbf;
+      background-color: #e54800;
     }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
     input[type="file"] {
       display: none;
-    }
-    .intro-text {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #333;
     }
   </style>
 </head>
 <body>
   <div class="upload-container">
-    <img src="../images/icon.png" alt="Icon" style="width: 100px; height: 100px;">
+    <img src="../images/icon.png" alt="Palladio">
+    <h2>Import LinkedIn Contacts</h2>
     <div class="intro-text">
-      <p>Please upload a CSV file with LinkedIn contacts.</p>
-      <p>The CSV file should have the following columns:</p>
-      <ul style="text-align: left; display: inline-block;">
+      <p>Upload a CSV file with your LinkedIn contacts for bulk enrichment.</p>
+      <p>Required columns:</p>
+      <ul>
         <li><strong>Full Name</strong> or <strong>Name</strong></li>
         <li><strong>LinkedIn URL</strong> or <strong>LinkedIn Profile</strong></li>
       </ul>
     </div>
-    <button id="uploadCsvButton">Upload CSV File with LinkedIn Contacts</button>
+    <button id="uploadCsvButton">Upload CSV File</button>
     <input type="file" id="csvFileInput" accept=".csv">
   </div>
-  <script type="module" src="upload.js"></script>
+  <script type="module" src="../dist/upload.js"></script>
 </body>
 </html>

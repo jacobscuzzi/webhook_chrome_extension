@@ -1,91 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Webhook</title>
+  <title>Palladio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #ffffff;
-      color: #fff;
-      width: 300px;
+    * {
       box-sizing: border-box;
     }
 
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      color: #1e1e1e;
+      width: 450px;
+    }
+
     h3 {
-      font-size: 20px;
-      color: #000000;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e1e1e;
       text-align: center;
+      margin: 0 0 20px 0;
     }
 
     .form-field {
-      margin-bottom: 15px;
+      margin-bottom: 14px;
     }
 
     .form-field label {
       display: block;
-      font-size: 14px;
-      font-weight: bold;
-      color: #000000;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b6b6b;
+      margin-bottom: 6px;
     }
 
     .form-field input {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #000000;
-      border-radius: 5px;
-      background-color: #d7d7d7;
-      color: #000000;
+      padding: 10px 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      background-color: #ffffff;
+      color: #1e1e1e;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-field input:focus {
+      outline: none;
+      border-color: #fc5000;
     }
 
     button {
       width: 100%;
-      padding: 10px;
-      background-color: #4877FF;
-      color: #fff;
+      padding: 12px 16px;
+      background-color: #fc5000;
+      color: #ffffff;
       border: none;
-      border-radius: 5px;
-      font-size: 16px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
       margin-bottom: 10px;
+      transition: transform 0.1s ease, background-color 0.2s ease;
     }
 
     button:hover {
-      background-color: #4877FF;
+      background-color: #e54800;
     }
 
-    .toggle-title {
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 15px;
-      color: #fff;
+    button:active {
+      transform: scale(0.97);
     }
 
-    .toggle-links {
-      display: none;
-      margin-top: 10px;
+    .btn-secondary {
+      background-color: #f5f5f5;
+      color: #1e1e1e;
     }
 
-    .toggle-links a {
-      display: block;
-      color: #4877FF;
-      text-decoration: none;
-      margin-bottom: 5px;
-    }
-
-    .toggle-links a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-      color: #fff;
+    .btn-secondary:hover {
+      background-color: #ebebeb;
     }
 
     .header {
@@ -93,50 +93,109 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
     }
 
     .header img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
     }
 
     .email-container {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
+      gap: 10px;
     }
 
-    .email-container input {
-      width: calc(100% - 60px);
-      margin-right: 10px;
+    #emailView .email-container {
+      margin-bottom: 0;
     }
 
-    .email-container button {
-      width: 50px;
-      padding: 8px;
-      background-color: #4877FF;
-      color: #000000;
-      border: none;
-      border-radius: 5px;
+    #emailView .email-container input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      background-color: #ffffff;
+      color: #1e1e1e;
+      font-family: 'Inter', sans-serif;
       font-size: 14px;
-      cursor: pointer;
     }
 
-    .email-container button:hover {
-      background-color: #7f9fff;
+    #emailView .email-container input:focus {
+      outline: none;
+      border-color: #fc5000;
     }
 
-    .file-input-container {
-      margin-bottom: 15px;
+    #emailView .email-container button {
+      width: auto;
+      padding: 10px 20px;
+      margin: 0;
+    }
+
+    .header .email-container {
+      margin-bottom: 0;
+    }
+
+    #savedEmail {
+      font-size: 13px;
+      color: #6b6b6b;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #editEmailButton {
+      width: auto;
+      padding: 6px 12px;
+      margin: 0;
+      font-size: 12px;
+      background-color: #f5f5f5;
+      color: #1e1e1e;
+      border-radius: 6px;
+    }
+
+    #editEmailButton:hover {
+      background-color: #ebebeb;
+    }
+
+    #formContainer {
+      background-color: #fafafa;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    #formContainer:empty {
+      display: none;
+    }
+
+    #formContainer .form-field:last-child {
+      margin-bottom: 0;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .actions button {
+      margin-bottom: 0;
+    }
+
+    #importCsvButton {
+      margin-top: 4px;
     }
 
   </style>
 </head>
 <body>
   <div id="emailView">
-    <h3>Enter Your Email</h3>
+    <h3>Welcome to Palladio</h3>
     <div class="email-container">
       <input type="email" id="emailInput" placeholder="Enter your email">
       <button id="saveEmailButton">Save</button>
@@ -145,22 +204,22 @@
 
   <div id="mainView" style="display: none;">
     <div class="header">
-      <img src="../images/icon.png" alt="Icon">
-      <div class="email-container" style="display: flex; align-items: center;">
-        <span id="savedEmail" style="color: #000000; margin-right: 10px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></span>
-        <button id="editEmailButton" style="width: auto; color: #ffffff; padding: 5px 10px; margin: 0;">Modifier</button>
+      <img src="../images/icon.png" alt="Palladio">
+      <div class="email-container">
+        <span id="savedEmail"></span>
+        <button id="editEmailButton">Edit</button>
       </div>
     </div>
 
     <div id="formContainer"></div>
 
-    <button id="sendToWebhook1">Enrichir Contact</button>
-    <button id="sendToWebhook2">Analyse Entreprise</button>
-    <!--<button id="sendToWebhook3">Send to Indepth Research</button>-->
-    <!--<button id="sendToWebhook4">Send to Custom Learningpage</button>-->
-    <button id="importCsvButton">Import CSV</button>
+    <div class="actions">
+      <button id="sendToWebhook1">Enrichir Contact</button>
+      <button id="sendToWebhook2">Analyse Entreprise</button>
+      <button id="importCsvButton" class="btn-secondary">Import CSV</button>
+    </div>
     <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
   </div>
-  <script type="module" src="popup.js"></script>
+  <script type="module" src="../dist/popup.js"></script>
 </body>
 </html>
