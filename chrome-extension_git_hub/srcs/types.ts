@@ -2,14 +2,13 @@
 export interface WebhookConfig {
   webhook1: string;
   webhook2: string;
-  malo_tester?: string;
-  tester?: string;
 }
 
 // LinkedIn profile data extracted from page
 export interface LinkedInProfileData {
   linkedinUrl: string;
   fullName: string;
+  companyName: string;
   linkedinCompanyPage: string;
 }
 

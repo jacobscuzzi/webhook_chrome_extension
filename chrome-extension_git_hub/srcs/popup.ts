@@ -120,6 +120,9 @@ function renderProfileForm(container: HTMLElement, data: LinkedInProfileData): v
     createFormField('Full Name', 'field2', data.fullName)
   );
   container.appendChild(
+    createFormField('Company Name', 'field3', data.companyName)
+  );
+  container.appendChild(
     createFormField('LinkedIn Company Page', 'field5', cleanUrl(data.linkedinCompanyPage))
   );
 }
@@ -130,12 +133,13 @@ async function sendToWebhook(webhookUrl: string, creatorEmail: string): Promise<
 
   const field1 = getElement<HTMLInputElement>('field1');
   const field2 = getElement<HTMLInputElement>('field2');
+  const field3 = getElement<HTMLInputElement>('field3');
   const field5 = getElement<HTMLInputElement>('field5');
 
   const payload: ContactWebhookPayload = {
     "LinkedIn Url": field1?.value ?? "",
     "Full Name": field2?.value ?? "",
-    "Company Name": field2?.value ?? "",
+    "Company Name": field3?.value ?? "",
     "LinkedIn Company Page": field5?.value ?? "",
     "creator": creatorEmail,
   };
@@ -249,10 +253,27 @@ document.addEventListener("DOMContentLoaded", async (): Promise<void> => {
           const companyPageElement = document.querySelector(
             '[data-field="experience_company_logo"]'
           );
+          // Get company name from the experience section - look for the company name link/text
+          // near the company logo element
+          let companyName = "";
+          if (companyPageElement) {
+            // Try to find the company name in the same experience card
+            const experienceCard = companyPageElement.closest('li');
+            if (experienceCard) {
+              // Look for company name link or text in the experience card
+              const companyNameLink = experienceCard.querySelector('a[data-field="experience_company_logo"] + div span[aria-hidden="true"]') ||
+                experienceCard.querySelector('.t-14.t-normal span[aria-hidden="true"]') ||
+                experienceCard.querySelector('[class*="hoverable-link-text"] span[aria-hidden="true"]');
+              const rawCompanyName = companyNameLink?.textContent?.trim() ?? "";
+              // Extract only company name (before the · separator which contains employment type)
+              companyName = rawCompanyName.split('·')[0].trim();
+            }
+          }
 
           return {
             linkedinUrl: window.location.href,
             fullName: fullNameElement?.textContent?.trim() ?? "Not Found",
+            companyName: companyName,
             linkedinCompanyPage: companyPageElement?.getAttribute("href") ?? "Not Found",
           };
         },
