@@ -7,17 +7,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #0f0f0f;
-      --bg-elevated: rgba(255,255,255,0.04);
-      --bg-glass: rgba(255,255,255,0.06);
-      --border-subtle: rgba(255,255,255,0.08);
-      --border-glass: rgba(255,255,255,0.12);
-      --text-primary: #ffffff;
-      --text-secondary: #a0a0a0;
-      --text-muted: #6b6b6b;
+      --bg-primary: #ffffff;
+      --bg-card: #f5f5f5;
+      --border-subtle: #e0e0e0;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --text-muted: #999999;
       --accent: #fc5000;
       --accent-hover: #ff6a1a;
-      --accent-glow: rgba(252,80,0,0.3);
     }
 
     * {
@@ -40,18 +37,15 @@
     .upload-container {
       max-width: 420px;
       width: 100%;
-      background: var(--bg-glass);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 16px;
       padding: 40px;
     }
 
-    .upload-container img {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
+    .upload-container img.logo {
+      height: 32px;
+      width: auto;
       margin-bottom: 24px;
     }
 
@@ -100,12 +94,10 @@
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.15s ease-out;
-      box-shadow: 0 0 24px var(--accent-glow);
     }
 
     button:hover {
       background-color: var(--accent-hover);
-      box-shadow: 0 0 36px rgba(252,80,0,0.5);
       transform: scale(1.02);
     }
 
@@ -120,7 +112,7 @@
 </head>
 <body>
   <div class="upload-container">
-    <img src="../images/icon.png" alt="Palladio">
+    <img src="../images/logo.png" alt="Palladio" class="logo">
     <h2>Import LinkedIn Contacts</h2>
     <div class="intro-text">
       <p>Upload a CSV file with your LinkedIn contacts for bulk enrichment.</p>

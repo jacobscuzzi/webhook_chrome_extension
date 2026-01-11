@@ -1,4 +1,35 @@
-import { webhooks } from './webhook_tools.js';
+import { getButtonsForPageType, detectPageType } from './webhook_tools.js';
+import { PageType as PageTypeEnum } from './types.js';
+// Track current state for SPA detection
+let currentPageType = PageTypeEnum.OTHER;
+let currentTabId;
+let fullEmail = "";
+// Extraction functions (moved from inline code for reusability)
+function extractCompanyData() {
+    const companyNameElement = document.querySelector("h1") ||
+        document.querySelector(".ember-view.org-top-card-summary__title");
+    return {
+        linkedinUrl: window.location.href,
+        companyName: companyNameElement?.textContent?.trim() ?? "Not Found",
+    };
+}
+function extractProfileData() {
+    const fullNameElement = document.querySelector(".inline.t-24.v-align-middle.break-words");
+    const companyPageElement = document.querySelector('[data-field="experience_company_logo"]');
+    let companyName = "";
+    const topCompanyElement = document.querySelector('button[aria-label*="company"] span') ||
+        document.querySelector('a[data-field="current_company_link"] span') ||
+        document.querySelector('.pv-text-details__right-panel a[href*="/company/"] span');
+    if (topCompanyElement) {
+        companyName = topCompanyElement.textContent?.trim() ?? "";
+    }
+    return {
+        linkedinUrl: window.location.href,
+        fullName: fullNameElement?.textContent?.trim() ?? "Not Found",
+        companyName: companyName,
+        linkedinCompanyPage: companyPageElement?.getAttribute("href") ?? "Not Found",
+    };
+}
 // Type-safe DOM element getters
 function getElement(id) {
     return document.getElementById(id);
@@ -94,13 +125,27 @@ async function sendToWebhook(webhookUrl, creatorEmail) {
     const field2 = getElement('field2');
     const field3 = getElement('field3');
     const field5 = getElement('field5');
-    const payload = {
-        "LinkedIn Url": field1?.value ?? "",
-        "Full Name": field2?.value ?? "",
-        "Company Name": field3?.value ?? "",
-        "LinkedIn Company Page": field5?.value ?? "",
-        "creator": creatorEmail,
-    };
+    let payload;
+    if (currentPageType === PageTypeEnum.COMPANY) {
+        // Company page: field1 = company URL, field2 = company name
+        payload = {
+            "LinkedIn Url": "",
+            "Full Name": "",
+            "Company Name": field2?.value ?? "",
+            "LinkedIn Company Page": field1?.value ?? "",
+            "creator": creatorEmail,
+        };
+    }
+    else {
+        // Profile page or default: field1 = profile URL, field2 = full name, etc.
+        payload = {
+            "LinkedIn Url": field1?.value ?? "",
+            "Full Name": field2?.value ?? "",
+            "Company Name": field3?.value ?? "",
+            "LinkedIn Company Page": field5?.value ?? "",
+            "creator": creatorEmail,
+        };
+    }
     try {
         const response = await fetch(webhookUrl, {
             method: "POST",
@@ -108,7 +153,7 @@ async function sendToWebhook(webhookUrl, creatorEmail) {
             body: JSON.stringify(payload),
         });
         if (response.ok) {
-            alert("Tu vas recevoir un message sur Teams dans quelques instants !");
+            alert("Data sent successfully! You'll receive a notification shortly.");
         }
         else {
             alert("Failed to send data to the webhook.");
@@ -128,6 +173,72 @@ function updateEmailDisplay(element, email) {
     element.textContent = displayEmail;
     element.title = email;
 }
+// Render webhook buttons dynamically
+function renderWebhookButtons(container, pageType) {
+    container.innerHTML = ''; // Clear existing buttons
+    const buttons = getButtonsForPageType(pageType);
+    buttons.forEach(config => {
+        const button = document.createElement('button');
+        button.id = config.id;
+        button.textContent = config.label;
+        button.addEventListener('click', () => {
+            console.log(`Button clicked: ${config.label}`);
+            sendToWebhook(config.webhookUrl, fullEmail);
+        });
+        container.appendChild(button);
+    });
+}
+// Listen for tab URL changes (SPA navigation)
+function setupNavigationListener() {
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+        // Only react to URL changes on our current tab
+        if (tabId === currentTabId && changeInfo.url) {
+            const newPageType = detectPageType(changeInfo.url);
+            // Re-render if page type changed
+            if (newPageType !== currentPageType) {
+                console.log(`Page type changed: ${currentPageType} -> ${newPageType}`);
+                initializePage();
+            }
+        }
+    });
+}
+// Initialize page: extract data and render buttons
+async function initializePage() {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab.url || !tab.id) {
+        console.log("No active tab or URL found");
+        return;
+    }
+    currentTabId = tab.id;
+    const pageType = detectPageType(tab.url);
+    currentPageType = pageType;
+    const formContainer = getRequiredElement("formContainer");
+    const actionsContainer = getRequiredElement("actions");
+    // Clear existing content
+    formContainer.innerHTML = '';
+    actionsContainer.innerHTML = '';
+    // Extract and render data based on page type
+    if (pageType === PageTypeEnum.COMPANY) {
+        const [{ result }] = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: extractCompanyData
+        });
+        if (result) {
+            renderCompanyForm(formContainer, result);
+        }
+    }
+    else if (pageType === PageTypeEnum.PROFILE) {
+        const [{ result }] = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: extractProfileData
+        });
+        if (result) {
+            renderProfileForm(formContainer, result);
+        }
+    }
+    // Render appropriate buttons
+    renderWebhookButtons(actionsContainer, pageType);
+}
 // Main initialization
 document.addEventListener("DOMContentLoaded", async () => {
     // Get all required DOM elements
@@ -137,9 +248,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const saveEmailButton = getRequiredElement("saveEmailButton");
     const savedEmail = getRequiredElement("savedEmail");
     const editEmailButton = getRequiredElement("editEmailButton");
-    const formContainer = getRequiredElement("formContainer");
     const importCsvButton = getRequiredElement("importCsvButton");
-    let fullEmail = "";
     // Load saved email - properly using async/await
     const storedEmail = await getStorageEmail();
     if (storedEmail) {
@@ -169,72 +278,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         mainView.style.display = "none";
         emailView.style.display = "block";
     });
-    // Extract LinkedIn data from current tab
-    try {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (!tab.url || !tab.id) {
-            console.log("No active tab or URL found");
-            return;
-        }
-        if (tab.url.includes("linkedin.com/company/")) {
-            const [{ result }] = await chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                func: () => {
-                    const companyNameElement = document.querySelector("h1") ||
-                        document.querySelector(".ember-view.org-top-card-summary__title");
-                    return {
-                        linkedinUrl: window.location.href,
-                        companyName: companyNameElement?.textContent?.trim() ?? "Not Found",
-                    };
-                },
-            });
-            if (result) {
-                renderCompanyForm(formContainer, result);
-            }
-        }
-        else if (tab.url.includes("linkedin.com/in/")) {
-            const [{ result }] = await chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                func: () => {
-                    const fullNameElement = document.querySelector(".inline.t-24.v-align-middle.break-words");
-                    const companyPageElement = document.querySelector('[data-field="experience_company_logo"]');
-                    // Get company name from the top profile section (company icon near headline)
-                    let companyName = "";
-                    // Look for the company name link in the top card section (next to the profile photo)
-                    const topCompanyElement = document.querySelector('button[aria-label*="company"] span') ||
-                        document.querySelector('a[data-field="current_company_link"] span') ||
-                        document.querySelector('.pv-text-details__right-panel a[href*="/company/"] span');
-                    if (topCompanyElement) {
-                        companyName = topCompanyElement.textContent?.trim() ?? "";
-                    }
-                    return {
-                        linkedinUrl: window.location.href,
-                        fullName: fullNameElement?.textContent?.trim() ?? "Not Found",
-                        companyName: companyName,
-                        linkedinCompanyPage: companyPageElement?.getAttribute("href") ?? "Not Found",
-                    };
-                },
-            });
-            if (result) {
-                renderProfileForm(formContainer, result);
-            }
-        }
-    }
-    catch (error) {
-        console.error("Error determining page type:", error);
-    }
+    // Extract LinkedIn data from current tab and render buttons
+    await initializePage();
+    // Setup SPA navigation detection
+    setupNavigationListener();
     // Import CSV button handler
     importCsvButton.addEventListener('click', () => {
         window.open('upload.html', '_blank', 'width=800,height=600');
-    });
-    // Webhook button handlers
-    getRequiredElement("sendToWebhook1").addEventListener("click", () => {
-        console.log("Send to Webhook 1 button clicked");
-        sendToWebhook(webhooks.webhook1, fullEmail);
-    });
-    getRequiredElement("sendToWebhook2").addEventListener("click", () => {
-        console.log("Send to Webhook 2 button clicked");
-        sendToWebhook(webhooks.webhook2, fullEmail);
     });
 });
 //# sourceMappingURL=popup.js.map

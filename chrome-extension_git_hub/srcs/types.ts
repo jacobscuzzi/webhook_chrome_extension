@@ -1,7 +1,28 @@
+// Page type enum for type safety
+export enum PageType {
+  PROFILE = 'profile',    // /in/ pages
+  COMPANY = 'company',    // /company/ pages
+  OTHER = 'other'         // non-LinkedIn or unsupported pages
+}
+
+// Button configuration interface
+export interface ButtonConfig {
+  id: string;                    // Unique identifier (e.g., 'fullFunnel')
+  label: string;                 // Display text
+  webhookUrl: string;            // Clay webhook endpoint
+  pageTypes: PageType[];         // Which page types show this button
+  order: number;                 // Display order (lower = first)
+}
+
 // Webhook configuration
 export interface WebhookConfig {
-  webhook1: string;
-  webhook2: string;
+  webhook1: string;                    // Legacy: kept for compatibility
+  webhook2: string;                    // Legacy: kept for compatibility
+  fullFunnel: string;                  // New: Add in full funnel
+  lookalikeCompanyProfile: string;     // New: Lookalike company (Profile pages)
+  lookalikeCompanyCompany: string;     // New: Lookalike company (Company pages)
+  findPeople: string;                  // New: Find People + Push in CRM
+  csvImport: string;                   // New: CSV import endpoint
 }
 
 // LinkedIn profile data extracted from page

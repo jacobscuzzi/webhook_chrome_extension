@@ -1,8 +1,5 @@
-const webhooks = {
-    webhook1: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-90daaca4-a9c9-40be-aa69-17245b91faa8",
-    webhook2: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-583c0378-a31d-47e9-ae07-e5af6a945e88",
-};
-// Helper function to show notifications in service worker context
+import { buttonConfigs, detectPageType } from './webhook_tools.js';
+// Helper function to show notifications
 async function showNotification(title, message) {
     await chrome.notifications.create({
         type: 'basic',
@@ -11,48 +8,47 @@ async function showNotification(title, message) {
         message
     });
 }
-// Create context menus
+// Create context menus dynamically from buttonConfigs
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create({
-        id: "sendToWebhook1",
-        title: "Enrichir Contact",
-        contexts: ["link"],
-    });
-    chrome.contextMenus.create({
-        id: "sendToWebhook2",
-        title: "Analyse Entreprise",
-        contexts: ["link"],
+    buttonConfigs.forEach(config => {
+        chrome.contextMenus.create({
+            id: config.id,
+            title: config.label,
+            contexts: ["link"],
+            documentUrlPatterns: ["*://*.linkedin.com/*"]
+        });
     });
 });
 // Handle context menu clicks
-chrome.contextMenus.onClicked.addListener(async (info, _tab) => {
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const linkUrl = info.linkUrl;
     if (!linkUrl || !linkUrl.includes("linkedin.com/")) {
         await showNotification("Error", "This is not a LinkedIn link.");
         return;
     }
-    const menuItemId = info.menuItemId;
-    // Type-safe webhook lookup
-    let webhookUrl;
-    if (menuItemId === "sendToWebhook1") {
-        webhookUrl = webhooks.webhook1;
-    }
-    else if (menuItemId === "sendToWebhook2") {
-        webhookUrl = webhooks.webhook2;
-    }
-    if (!webhookUrl) {
-        await showNotification("Error", "Invalid Webhook.");
+    // Detect page type from the clicked link
+    const pageType = detectPageType(linkUrl);
+    // Find the button config for this menu item
+    const config = buttonConfigs.find(c => c.id === info.menuItemId);
+    if (!config) {
+        await showNotification("Error", "Invalid menu action.");
         return;
     }
+    // Validate that the button is appropriate for this page type
+    if (!config.pageTypes.includes(pageType)) {
+        await showNotification("Invalid Action", `This action is not available for ${pageType} pages.`);
+        return;
+    }
+    // Send to webhook
     const payload = { linkUrl };
     try {
-        const response = await fetch(webhookUrl, {
+        const response = await fetch(config.webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
         });
         if (response.ok) {
-            await showNotification("Success", "Data successfully sent to the webhook!");
+            await showNotification("Success", `${config.label}: Data sent successfully!`);
         }
         else {
             await showNotification("Error", "Failed to send data to the webhook.");
@@ -63,5 +59,4 @@ chrome.contextMenus.onClicked.addListener(async (info, _tab) => {
         await showNotification("Error", "An error occurred.");
     }
 });
-export {};
 //# sourceMappingURL=background.js.map

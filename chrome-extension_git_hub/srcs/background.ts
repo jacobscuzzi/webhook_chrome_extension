@@ -1,13 +1,7 @@
+import { buttonConfigs, detectPageType } from './webhook_tools.js';
 import type { LinkWebhookPayload } from './types.js';
 
-const webhooks = {
-  webhook1: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-90daaca4-a9c9-40be-aa69-17245b91faa8",
-  webhook2: "https://api.clay.com/v3/sources/webhook/pull-in-data-from-a-webhook-583c0378-a31d-47e9-ae07-e5af6a945e88",
-} as const;
-
-type WebhookId = 'sendToWebhook1' | 'sendToWebhook2';
-
-// Helper function to show notifications in service worker context
+// Helper function to show notifications
 async function showNotification(title: string, message: string): Promise<void> {
   await chrome.notifications.create({
     type: 'basic',
@@ -17,23 +11,21 @@ async function showNotification(title: string, message: string): Promise<void> {
   });
 }
 
-// Create context menus
+// Create context menus dynamically from buttonConfigs
 chrome.runtime.onInstalled.addListener((): void => {
-  chrome.contextMenus.create({
-    id: "sendToWebhook1",
-    title: "Enrichir Contact",
-    contexts: ["link"],
-  });
-  chrome.contextMenus.create({
-    id: "sendToWebhook2",
-    title: "Analyse Entreprise",
-    contexts: ["link"],
+  buttonConfigs.forEach(config => {
+    chrome.contextMenus.create({
+      id: config.id,
+      title: config.label,
+      contexts: ["link"],
+      documentUrlPatterns: ["*://*.linkedin.com/*"]
+    });
   });
 });
 
 // Handle context menu clicks
 chrome.contextMenus.onClicked.addListener(
-  async (info: chrome.contextMenus.OnClickData, _tab?: chrome.tabs.Tab): Promise<void> => {
+  async (info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab): Promise<void> => {
     const linkUrl = info.linkUrl;
 
     if (!linkUrl || !linkUrl.includes("linkedin.com/")) {
@@ -41,32 +33,38 @@ chrome.contextMenus.onClicked.addListener(
       return;
     }
 
-    const menuItemId = info.menuItemId as string;
+    // Detect page type from the clicked link
+    const pageType = detectPageType(linkUrl);
 
-    // Type-safe webhook lookup
-    let webhookUrl: string | undefined;
-    if (menuItemId === "sendToWebhook1") {
-      webhookUrl = webhooks.webhook1;
-    } else if (menuItemId === "sendToWebhook2") {
-      webhookUrl = webhooks.webhook2;
-    }
+    // Find the button config for this menu item
+    const config = buttonConfigs.find(c => c.id === info.menuItemId);
 
-    if (!webhookUrl) {
-      await showNotification("Error", "Invalid Webhook.");
+    if (!config) {
+      await showNotification("Error", "Invalid menu action.");
       return;
     }
 
+    // Validate that the button is appropriate for this page type
+    if (!config.pageTypes.includes(pageType)) {
+      await showNotification(
+        "Invalid Action",
+        `This action is not available for ${pageType} pages.`
+      );
+      return;
+    }
+
+    // Send to webhook
     const payload: LinkWebhookPayload = { linkUrl };
 
     try {
-      const response = await fetch(webhookUrl, {
+      const response = await fetch(config.webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        await showNotification("Success", "Data successfully sent to the webhook!");
+        await showNotification("Success", `${config.label}: Data sent successfully!`);
       } else {
         await showNotification("Error", "Failed to send data to the webhook.");
       }

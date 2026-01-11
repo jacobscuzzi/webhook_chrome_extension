@@ -91,7 +91,7 @@ async function sendContactToWebhook(
 
   try {
     console.log(`Sending data for contact: ${contact.fullName}`);
-    const response = await fetch(webhooks.webhook1, {
+    const response = await fetch(webhooks.csvImport, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
