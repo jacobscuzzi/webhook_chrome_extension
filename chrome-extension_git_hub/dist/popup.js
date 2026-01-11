@@ -198,21 +198,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 func: () => {
                     const fullNameElement = document.querySelector(".inline.t-24.v-align-middle.break-words");
                     const companyPageElement = document.querySelector('[data-field="experience_company_logo"]');
-                    // Get company name from the experience section - look for the company name link/text
-                    // near the company logo element
+                    // Get company name from the top profile section (company icon near headline)
                     let companyName = "";
-                    if (companyPageElement) {
-                        // Try to find the company name in the same experience card
-                        const experienceCard = companyPageElement.closest('li');
-                        if (experienceCard) {
-                            // Look for company name link or text in the experience card
-                            const companyNameLink = experienceCard.querySelector('a[data-field="experience_company_logo"] + div span[aria-hidden="true"]') ||
-                                experienceCard.querySelector('.t-14.t-normal span[aria-hidden="true"]') ||
-                                experienceCard.querySelector('[class*="hoverable-link-text"] span[aria-hidden="true"]');
-                            const rawCompanyName = companyNameLink?.textContent?.trim() ?? "";
-                            // Extract only company name (before the · separator which contains employment type)
-                            companyName = rawCompanyName.split('·')[0].trim();
-                        }
+                    // Look for the company name link in the top card section (next to the profile photo)
+                    const topCompanyElement = document.querySelector('button[aria-label*="company"] span') ||
+                        document.querySelector('a[data-field="current_company_link"] span') ||
+                        document.querySelector('.pv-text-details__right-panel a[href*="/company/"] span');
+                    if (topCompanyElement) {
+                        companyName = topCompanyElement.textContent?.trim() ?? "";
                     }
                     return {
                         linkedinUrl: window.location.href,
